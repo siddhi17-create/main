@@ -13,22 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 6.0.x  # Replace '6.0.x' with the specific .NET 6 version you need
 
       - name: Restore dependencies
-        working-directory:  ./DataBaseMigration/DataBaseMigration
         run: dotnet restore
 
+      - name: Build Database Migration
+        run: dotnet build
+        working-directory: ./DataBaseMigration/DataBaseMigration/DataBaseMigration  # Adjust as needed
 
-      - name: List Repository Contents
-        run: |
-          ls -R
-          
-      - name: Build and Run Database Migration
-        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
-        run: |
-          dotnet build 
-          dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
+      - name: Run Database Migration
+        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
+        working-directory: ./DataBaseMigration/DataBaseMigration/DataBaseMigration  # Adjust as needed
