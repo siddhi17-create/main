@@ -25,4 +25,6 @@ jobs:
 
       - name: Execute DbUp Migrations
         run: |
-          dotnet "D:\GitTest\DataBaseMigration\DataBaseMigration\DataBaseMigration\dbup-cli.dll" upgrade -c "Server=localhost\\SQLEXPRESS;Database=TaskManager_DB;Integrated Security=True;TrustServerCertificate=True"
+         dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
+        env:
+          CONNECTION_STRING: "server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true;TrustServerCertificate=true"
