@@ -30,5 +30,5 @@ jobs:
       - name: Build and Run Database Migration
         working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
         run: |
-          dotnet build ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
-          dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
+          dotnet build 
+          dotnet run
