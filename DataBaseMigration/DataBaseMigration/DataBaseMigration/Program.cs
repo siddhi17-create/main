@@ -1,3 +1,5 @@
+using DataBaseMigration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,7 +13,7 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json")
     .Build();
-
+DatabaseMigrationConfiguration.ConfigureAndMigrate(configuration);
 // Pass the configuration to the ConfigureServices method
 builder.Services.AddSingleton(configuration);
 
