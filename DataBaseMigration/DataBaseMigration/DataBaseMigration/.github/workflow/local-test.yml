@@ -1,0 +1,26 @@
+name: Database Migration
+
+on:
+  push:
+    branches:
+      - main  # Change to your main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1  # Change to your .NET Core version if needed
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Database Migration
+        run: dotnet run --project DataBaseMigration.csproj --connection-string "server=localhost\\SQLEXPRESS; database = TaskManager_DB;Integrated Security=true"
+        env:
