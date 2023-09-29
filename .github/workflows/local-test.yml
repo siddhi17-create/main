@@ -28,6 +28,5 @@ jobs:
         
 
       - name: Run Database Migration
-        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
-        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.sln
+        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
 
