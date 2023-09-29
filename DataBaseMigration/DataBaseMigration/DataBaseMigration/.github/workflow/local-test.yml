@@ -22,5 +22,5 @@ jobs:
         run: dotnet restore
 
       - name: Database Migration
-        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj --connection-string "server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true"
+        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj --connection-string "server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true;TrustServerCertificate=true"
         env:
