@@ -3,24 +3,29 @@ name: Database Migration
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger on
+      - main
 
 jobs:
-  db-up-migration:
-    runs-on: windows-latest  # Use the Windows runner if you're on Windows
+  build:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up .NET Core
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1  # or the version you need
+          dotnet-version: 3.1
 
+      - name: Restore dependencies
+        run: dotnet restore
 
+      - name: List Files
+        run: ls -R
 
-      - name: Execute DbUp Migrations
+      - name: Build and Run Database Migration
+        working-directory: DataBaseMigration/DataBaseMigration
         run: |
-         dotnet build "DataBaseMigration/DataBaseMigration.csproj"
-         dotnet run --project "DataBaseMigration/DataBaseMigration.csproj"
+          dotnet build
+          dotnet run
