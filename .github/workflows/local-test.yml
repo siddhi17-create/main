@@ -3,26 +3,33 @@ name: Database Migration
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger on
+      - main
 
 jobs:
-  db-up-migration:
-    runs-on: windows-latest  # Use the Windows runner if you're on Windows
+  build:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up .NET Core
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1  # or the version you need
+          dotnet-version: 6.0.x  # Replace '6.0.x' with the specific .NET 6 version you need
 
       - name: Restore dependencies
-        run: |
-          dotnet restore
-          dotnet tool restore  # Restore tools like DbUp if needed
+        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
+        run: dotnet restore
 
-      - name: Execute DbUp Migrations
-        run: |
-          dotnet "D:\GitTest\DataBaseMigration\DataBaseMigration\DataBaseMigration\dbup-cli.dll" upgrade -c "Server=localhost\\SQLEXPRESS;Database=TaskManager_DB;Integrated Security=True;TrustServerCertificate=True"
+      - name: Build Database Migration
+        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
+        run: dotnet build
+        
+
+      - name: Run Database Migration
+        working-directory: ./DataBaseMigration/DataBaseMigration 
+        run: dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj \
+          -- DB_CONNECTION_STRING="server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true;TrustServerCertificate=true"
+
+
