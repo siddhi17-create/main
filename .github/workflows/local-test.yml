@@ -31,4 +31,4 @@ jobs:
         working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
         run: |
           dotnet build 
-          dotnet run
+          dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
