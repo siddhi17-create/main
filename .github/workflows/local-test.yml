@@ -20,11 +20,11 @@ jobs:
 
       - name: Restore dependencies
         run: |
+          cd D:\GitTest\DataBaseMigration\DataBaseMigration\DataBaseMigration
           dotnet restore
           dotnet tool restore  # Restore tools like DbUp if needed
 
       - name: Execute DbUp Migrations
         run: |
-         dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
-        env:
-          CONNECTION_STRING: "server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true;TrustServerCertificate=true"
+          cd D:\GitTest\DataBaseMigration\DataBaseMigration\DataBaseMigration
+          dotnet dbup-cli.dll upgrade -c "Server=localhost\\SQLEXPRESS;Database=TaskManager_DB;Integrated Security=True;TrustServerCertificate=True"
