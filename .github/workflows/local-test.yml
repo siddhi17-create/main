@@ -23,11 +23,11 @@ jobs:
         run: dotnet restore
 
       - name: Build Database Migration
-        working-directory: ./DataBaseMigration/DataBaseMigration/DataBaseMigration  # Adjust as needed
+        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
         run: dotnet build
         
 
       - name: Run Database Migration
-        working-directory: ./DataBaseMigration/DataBaseMigration/DataBaseMigration  # Adjust as needed
+        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
         run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
 
