@@ -6,7 +6,7 @@ on:
       - main  # Change this to the branch you want to trigger on
 
 jobs:
-  build:
+  db-up-migration:
     runs-on: windows-latest  # Use the Windows runner if you're on Windows
 
     steps:
@@ -19,7 +19,10 @@ jobs:
           dotnet-version: 3.1  # or the version you need
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: |
+          dotnet restore
+          dotnet tool restore  # Restore tools like DbUp if needed
 
       - name: Execute DbUp Migrations
-        run: dotnet "D:\GitTest\DataBaseMigration\DataBaseMigration\DataBaseMigration\dbup-cli.dll" upgrade -c "server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true;TrustServerCertificate=true"
+        run: |
+          dotnet "D:\GitTest\DataBaseMigration\DataBaseMigration\DataBaseMigration\dbup-cli.dll" upgrade -c "Server=localhost\\SQLEXPRESS;Database=TaskManager_DB;Integrated Security=True;TrustServerCertificate=True"
