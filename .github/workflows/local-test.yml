@@ -18,14 +18,10 @@ jobs:
         with:
           dotnet-version: 3.1
 
-      - name: Restore dependencies
-        run: dotnet restore
-
       - name: List Files
-        run: ls -R
+        run: ls -R 
 
       - name: Build and Run Database Migration
-        working-directory: DataBaseMigration
         run: |
-          dotnet build
-          dotnet run
+              dotnet build "https://github.com/siddhi17-create/main/raw/main/DataBaseMigration/DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj"
+              dotnet run "https://github.com/siddhi17-create/main/raw/main/DataBaseMigration/DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj"
