@@ -28,5 +28,9 @@ jobs:
         
 
       - name: Run Database Migration
-        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
+        run: dotnet run --project ./main/DataBaseMigration/DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
+        working-directory: ./main/DataBaseMigration/DataBaseMigration/DataBaseMigration  # Adjust as needed
+        env:
+               DOTNET_ROOT: ${{ env.DOTNET_ROOT }}
+               DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
 
