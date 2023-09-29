@@ -10,9 +10,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
@@ -22,5 +19,6 @@ jobs:
         run: dotnet restore
 
       - name: Database Migration
-        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj --connection-string "server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true;TrustServerCertificate=true"
+        run: dotnet run --project ./DataBaseMigration/DataBaseMigration/DataBaseMigration.csproj
         env:
+          CONNECTION_STRING: "server=localhost\\SQLEXPRESS;database=TaskManager_DB;Integrated Security=true;TrustServerCertificate=true"
