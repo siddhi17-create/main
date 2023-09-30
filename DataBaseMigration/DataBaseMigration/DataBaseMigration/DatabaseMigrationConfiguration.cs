@@ -9,7 +9,7 @@
     {
         public static void ConfigureAndMigrate(IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DbCon"); ;
+            var connectionString = configuration.GetConnectionString("SqlDb"); ;
             var scriptsFolder = "DataBaseScripts";
 
             var upgrader = DeployChanges.To
