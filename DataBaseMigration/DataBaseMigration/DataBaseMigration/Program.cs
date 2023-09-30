@@ -13,7 +13,7 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json")
     .Build();
-//DatabaseMigrationConfiguration.ConfigureAndMigrate(configuration);
+DatabaseMigrationConfiguration.ConfigureAndMigrate(configuration);
 // Pass the configuration to the ConfigureServices method
 builder.Services.AddSingleton(configuration);
 
