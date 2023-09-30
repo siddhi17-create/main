@@ -1,5 +1,4 @@
 name: Database Migration
-
 on:
   push:
     branches:
