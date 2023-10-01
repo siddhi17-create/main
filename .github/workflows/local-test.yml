@@ -6,7 +6,7 @@ on:
   
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,11 +23,6 @@ jobs:
       - name: Build Database Migration
         working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
         run: dotnet build
-        
-      - name: Start SQL Server Browser
-        run: |
-          # Start the SQL Server Browser service
-          sudo systemctl start sqlbrowser
 
       - name: Run Database Migration
         working-directory: ./DataBaseMigration/DataBaseMigration 
