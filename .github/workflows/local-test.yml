@@ -27,7 +27,7 @@ jobs:
       - name: Start SQL Server Browser
         run: |
           # Start the SQL Server Browser service
-          sudo systemctl start mssql-server-browser
+          sudo systemctl start sqlbrowser
 
       - name: Run Database Migration
         working-directory: ./DataBaseMigration/DataBaseMigration 
