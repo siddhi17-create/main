@@ -26,16 +26,3 @@ jobs:
       - name: Run Database Migration
         run: |
            $output = dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj
-           if ($output -like "*Database migration successful!*") {
-           Write-Host "Database migration was successful!"
-           }
-           else {
-           Write-Host "Database migration failed!"
-           Write-Host "Cancelling the workflow..."
-      
-              $apiUrl = "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
-              $headers = @{
-              Authorization = "token $env:GITHUB_TOKEN"
-              Accept = "application/vnd.github.v3+json"
-           }
-           }
