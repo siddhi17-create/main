@@ -24,17 +24,15 @@ jobs:
         run: dotnet build
 
       - name: Run Database Migration
-        working-directory: ./DataBaseMigration/DataBaseMigration 
         run: |
-              output=$(dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj)
-
-              if echo "$output" | grep -q "Database migration successful!"; then
-              echo "Database migration was successful!"
-              else
-              echo "Database migration failed!"
-              echo "Cancelling the workflow..."
+           output=$(dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj)
+           if [[ $output == *"Database migration successful!"* ]]; then
+           echo "Database migration was successful!"
+           else
+           echo "Database migration failed!"
+           echo "Cancelling the workflow..."
       
-               curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \
-               "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
-              fi
+            curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+           -H "Accept: application/vnd.github.v3+json" \
+           "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
+           fi
