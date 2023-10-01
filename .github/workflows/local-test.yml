@@ -24,6 +24,7 @@ jobs:
         run: dotnet build
 
       - name: Run Database Migration
+        shell: pwsh
         run: |
            $output = dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj
            if ($output -like "*Database migration successful!*") {
