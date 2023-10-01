@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Database Migration
         run: |
-           output=$(dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj)
+           $output = dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj
            if ($output -like "*Database migration successful!*") {
            Write-Host "Database migration was successful!"
            }
