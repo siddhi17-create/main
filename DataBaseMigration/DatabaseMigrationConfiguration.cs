@@ -17,7 +17,7 @@
                 .WithScriptsFromFileSystem(scriptsFolder)
                 .LogToConsole()
                 .Build();
-
+             
             var result = upgrader.PerformUpgrade();
 
             if (!result.Successful)

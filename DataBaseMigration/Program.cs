@@ -9,14 +9,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile("appsettings.json")
-    .Build();
-DatabaseMigrationConfiguration.ConfigureAndMigrate(configuration);
-// Pass the configuration to the ConfigureServices method
-builder.Services.AddSingleton(configuration);
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
