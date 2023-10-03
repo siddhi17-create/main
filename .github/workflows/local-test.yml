@@ -23,22 +23,26 @@ jobs:
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet build
 
-      - name: Run Database Migration
-        id: run-migration
+     - name: Start Database Migration
+        id: start-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-            dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration
-            echo "::set-output name=result::success"
+          # Start the .NET application in the background
+          dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration &
+          echo $! > pid.txt  # Save the process ID to a file for later use
+          echo "::set-output name=result::success"
 
       - name: Wait for Database Migration to Complete
         id: wait-for-migration
         run: |
-            while true; do
-            if [ "$(ps aux | grep '[d]otnet run')" = "" ]; then
-              break
-            fi
-            sleep 5
-            done
+          # Wait for the migration process to complete
+          wait $(cat pid.txt)
+
+      - name: Stop Database Migration
+        if: steps.start-migration.outputs.result == 'success'
+        run: |
+          # Stop the running .NET application by killing it with the saved process ID
+          kill -TERM $(cat pid.txt)
 
       - name: Migration Succeeded
         if: steps.start-migration.outputs.result == 'success'
