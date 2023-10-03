@@ -30,13 +30,17 @@ jobs:
             dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration
             echo "::set-output name=result::success"
 
-      - name: Check Migration Result
-        if: steps.run-migration.outcome != 'success'
+      - name: Wait for Database Migration to Complete
+        id: wait-for-migration
         run: |
-          echo "The migration failed. You can add additional steps or notifications here."
-          exit 1  # Mark the workflow as failed
+            while true; do
+            if [ "$(ps aux | grep '[d]otnet run')" = "" ]; then
+              break
+            fi
+            sleep 5
+            done
 
       - name: Migration Succeeded
-        if: steps.run-migration.outcome == 'success'
+        if: steps.start-migration.outputs.result == 'success'
         run: |
           echo "The migration succeeded. You can add additional steps or notifications here."
