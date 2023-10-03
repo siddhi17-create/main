@@ -38,8 +38,8 @@ jobs:
         run: |
           # Check if the pid.txt file exists before attempting to stop the process
           if (Test-Path "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt") {
-            $pid = Get-Content "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
-            Stop-Process -Id $pid
+            $processId = Get-Content "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
+            Stop-Process -Id $processId
           }
 
       - name: Migration Succeeded
