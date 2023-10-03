@@ -27,9 +27,8 @@ jobs:
         id: start-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-          # Start the .NET application in the background
-          dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration &
-          echo $! > pid.txt  # Save the process ID to a file for later use
+          # Start the .NET application in the background using Start-Process
+          Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration" -PassThru | ForEach-Object { $_.Id | Out-File -FilePath "pid.txt" } 
           echo "::set-output name=result::success"
 
       - name: Wait for Database Migration to Complete
