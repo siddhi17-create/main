@@ -16,13 +16,25 @@ jobs:
           dotnet-version: 6.0.x  # Replace '6.0.x' with the specific .NET 6 version you need
           
       - name: Restore dependencies
-        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
+        working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet restore
 
       - name: Build Database Migration
-        working-directory: ./DataBaseMigration/DataBaseMigration  # Adjust as needed
+        working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet build
 
       - name: Run Database Migration
+        id: run-migration
+        working-directory: ./DataBaseMigration  # Adjust as needed
+        run: dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration|| echo "Migration failed"
+
+      - name: Check Migration Result
+        if: steps.run-migration.outcome == 'failure'
         run: |
-           $output = dotnet run --project ./DataBaseMigration/DataBaseMigration.csproj
+          echo "The migration failed. You can add additional steps or notifications here."
+          exit 1  # Mark the workflow as failed
+
+      - name: Migration Succeeded
+        if: steps.run-migration.outcome == 'success'
+        run: |
+          echo "The migration succeeded. You can add additional steps or notifications here."
