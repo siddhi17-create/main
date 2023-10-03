@@ -40,7 +40,14 @@ jobs:
           # Check if the pid.txt file exists before attempting to stop the process
           if (Test-Path "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt") {
             $processId = Get-Content "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
-            Stop-Process -Id $processId
+            $runningProcess = Get-Process -Id $processId -ErrorAction SilentlyContinue
+            if ($runningProcess -ne $null) {
+              Stop-Process -Id $processId -Force
+            } else {
+              echo "Process with ID $processId not found or already completed."
+            }
+          } else {
+            echo "pid.txt not found. The process may not have started."
           }
 
       - name: Migration Succeeded
