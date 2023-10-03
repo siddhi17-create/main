@@ -27,7 +27,7 @@ jobs:
         id: run-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-            if dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration; then
+            if(dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration); then
             echo "::set-output name=result::success"  # Set the result to success if the migration succeeds
             else
             echo "::set-output name=result::failure"  # Set the result to failure if the migration fails
