@@ -30,14 +30,17 @@ jobs:
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
           # Start the .NET application in the background using Start-Process
-          Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration" -PassThru | ForEach-Object { $_.Id | Out-File -FilePath "pid.txt" } 
+          Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration" -PassThru | ForEach-Object { $_.Id | Out-File -FilePath "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt" } 
           echo "::set-output name=result::success"
 
       - name: Stop Database Migration
         if: steps.start-migration.outputs.result == 'success'
         run: |
-          # Stop the running .NET application by killing it with the saved process ID
-          kill -TERM $(cat pid.txt)
+          # Check if the pid.txt file exists before attempting to stop the process
+          if (Test-Path "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt") {
+            $pid = Get-Content "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
+            Stop-Process -Id $pid
+          }
 
       - name: Migration Succeeded
         if: steps.start-migration.outputs.result == 'success'
