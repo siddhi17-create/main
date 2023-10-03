@@ -1,20 +1,22 @@
 name: Database Migration
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x  # Replace '6.0.x' with the specific .NET 6 version you need
-        
+
       - name: Restore dependencies
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet restore
@@ -23,22 +25,30 @@ jobs:
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet build
 
-      - name: Run Database Migration
-        id: run-migration
+      - name: Start Database Migration
+        id: start-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-            dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration
-            echo "::set-output name=result::success"
+              $process = Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration" -PassThru
+              $process.Id | Out-File -FilePath "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
+              echo "::set-output name=result::success"
 
-      - name: Wait for Database Migration to Complete
-        id: wait-for-migration
+
+      - name: Stop Database Migration
+        if: steps.start-migration.outputs.result == 'success'
         run: |
-            while true; do
-            if [ "$(ps aux | grep '[d]otnet run')" = "" ]; then
-              break
-            fi
-            sleep 5
-            done
+          # Check if the pid.txt file exists before attempting to stop the process
+          if (Test-Path "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt") {
+            $processId = Get-Content "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
+            $runningProcess = Get-Process -Id $processId -ErrorAction SilentlyContinue
+            if ($runningProcess -ne $null) {
+              Stop-Process -Id $processId -Force
+            } else {
+              echo "Process with ID $processId not found or already completed."
+            }
+          } else {
+            echo "pid.txt not found. The process may not have started."
+          }
 
       - name: Migration Succeeded
         if: steps.start-migration.outputs.result == 'success'
