@@ -1,20 +1,22 @@
 name: Database Migration
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x  # Replace '6.0.x' with the specific .NET 6 version you need
-        
+
       - name: Restore dependencies
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet restore
@@ -30,12 +32,6 @@ jobs:
           # Start the .NET application in the background using Start-Process
           Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration" -PassThru | ForEach-Object { $_.Id | Out-File -FilePath "pid.txt" } 
           echo "::set-output name=result::success"
-
-      - name: Wait for Database Migration to Complete
-        id: wait-for-migration
-        run: |
-          # Wait for the migration process to complete
-          wait $(cat pid.txt)
 
       - name: Stop Database Migration
         if: steps.start-migration.outputs.result == 'success'
