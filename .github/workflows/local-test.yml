@@ -23,7 +23,7 @@ jobs:
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet build
 
-     - name: Start Database Migration
+      - name: Start Database Migration
         id: start-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
