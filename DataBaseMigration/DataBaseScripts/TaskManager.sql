@@ -1,4 +1,4 @@
-CREATE Procedure test1
+CREATE Procedure GetTaskManagers
 AS
 BEGIN
 SELECT * FROM TaskManagers
