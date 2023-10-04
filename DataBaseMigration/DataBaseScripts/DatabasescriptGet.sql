@@ -6,5 +6,5 @@ SELECT [TaskManagerId]
       ,[Description]
       ,[Duedate]
       ,[Status]
-FROM [dbo].[TaskManagers] WHERE TaskManagerId = 1;
+FROM [dbo].[TaskManagers];
 END;
