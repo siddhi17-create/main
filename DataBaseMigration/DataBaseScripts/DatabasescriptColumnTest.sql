@@ -1,4 +1,4 @@
-ALTER PROCEDURE [dbo].[GetTaskManagerDataALL]
+ALTER PROCEDURE GetTaskManagerDataALL
 AS
 BEGIN
 SELECT [TaskManagerId]
