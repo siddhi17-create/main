@@ -25,13 +25,14 @@ jobs:
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: dotnet build
 
-      - name: Start Database Migration
-        id: start-migration
+      - name: Run Database Migration
+        id: run-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-              $process = Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration" -PassThru
-              $process.Id | Out-File -FilePath "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
-              echo "::set-output name=result::success"
+          $process = Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate" -PassThru
+          $process.Id | Out-File -FilePath "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
+          echo "::set-output name=result::success"
+
 
 
       - name: Stop Database Migration
