@@ -40,8 +40,11 @@ namespace DataBaseMigration
                         Console.WriteLine($"Script {scriptFile} failed to execute:");
                         Console.WriteLine(result.Error);
 
+                        var rollbackScriptName = $"RollBack_{Path.GetFileName(scriptFile)}";
+
                         // Rollback the failed script
-                        RollbackScript(connectionString, rollbackScriptsFolder, executedScripts, scriptFile);
+                        RollbackScript(connectionString, rollbackScriptsFolder, executedScripts, rollbackScriptName);
+
 
                         Console.WriteLine($"Rollback for script {scriptFile} completed.");
                     }
@@ -58,49 +61,42 @@ namespace DataBaseMigration
             }
         }
 
-        private static void RollbackScript(string connectionString, string rollbackScriptsFolder, List<string> executedScripts, string failedScript)
+        private static void RollbackScript(string connectionString, string rollbackScriptsFolder, List<string> executedScripts, string rollbackScriptName)
         {
             try
             {
-                // Check if the failed script was previously executed
-                if (executedScripts.Contains(failedScript))
-                {
-                    // Construct the path to the rollback script
-                    var rollbackScriptName = $"RollBack_{Path.GetFileName(failedScript)}";
+                // Check if the rollback script was previously executed
+                    // Form the path to the rollback script
                     var rollbackScriptPath = Path.Combine(rollbackScriptsFolder, rollbackScriptName);
 
-                    if (File.Exists(rollbackScriptPath))
+                    // Read the content of the rollback script
+                    var rollbackScriptContent = System.IO.File.ReadAllText(rollbackScriptPath);
+
+                    // Attempt to execute the rollback script
+                    var rollbackUpgrader = DeployChanges.To
+                        .SqlDatabase(connectionString)
+                        .WithScripts(new SqlScript(rollbackScriptName, rollbackScriptContent))
+                        .LogToConsole()
+                        .Build();
+
+                    var rollbackResult = rollbackUpgrader.PerformUpgrade();
+
+                    if (!rollbackResult.Successful)
                     {
-                        // Attempt to execute the corresponding rollback script
-                        var rollbackUpgrader = DeployChanges.To
-                            .SqlDatabase(connectionString)
-                            .WithScriptsFromFileSystem(rollbackScriptPath)
-                            .LogToConsole()
-                            .Build();
-
-                        var rollbackResult = rollbackUpgrader.PerformUpgrade();
-
-                        if (!rollbackResult.Successful)
-                        {
-                            Console.WriteLine($"Rollback for script {failedScript} failed:");
-                            Console.WriteLine(rollbackResult.Error);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Rollback for script {failedScript} successful.");
-                        }
+                        Console.WriteLine($"Rollback for script {rollbackScriptName} failed:");
+                        Console.WriteLine(rollbackResult.Error);
                     }
                     else
                     {
-                        Console.WriteLine($"Rollback script {rollbackScriptPath} not found.");
+                        Console.WriteLine($"Rollback for script {rollbackScriptName} successful.");
                     }
-                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error during rollback: {ex.Message}");
             }
         }
+
 
     }
 
