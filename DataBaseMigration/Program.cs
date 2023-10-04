@@ -11,7 +11,6 @@ builder.Services.AddSwaggerGen();
 if (args.Contains("--migrate", StringComparer.OrdinalIgnoreCase))
 {
     var configuration = new ConfigurationBuilder()
-        .SetBasePath(builder.Environment.ContentRootPath)
         .AddJsonFile("appsettings.json")
         .Build();
     DatabaseMigrationConfiguration.ConfigureAndMigrate(configuration);
