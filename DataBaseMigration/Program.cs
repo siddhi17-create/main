@@ -10,11 +10,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 if (args.Contains("--migrate", StringComparer.OrdinalIgnoreCase))
 {
+    var appSettingsPath = "appsettings.json"; // Assuming the file is in the same directory as the executable
+    Console.WriteLine($"Loading appsettings from: {appSettingsPath}");
+
     var configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json")
+        .AddJsonFile(appSettingsPath)
         .Build();
+
+    var connectionString = configuration.GetConnectionString("SqlDb");
+    Console.WriteLine($"Connection string: {connectionString}");
+
     DatabaseMigrationConfiguration.ConfigureAndMigrate(configuration);
 }
+
 else
 {
     Console.WriteLine("Database migration skipped. To run the migration, use the --migrate command-line argument.");
