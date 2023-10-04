@@ -1,4 +1,4 @@
-CREATE PROCEDURE [GetTaskManager]
+CREATE PROCEDURE [GetTasks]
 AS
 BEGIN
 SELECT [TaskManagerId]
