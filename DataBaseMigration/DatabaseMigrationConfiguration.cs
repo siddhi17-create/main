@@ -1,4 +1,6 @@
-﻿namespace DataBaseMigration
+﻿using DbUp.Engine;
+
+namespace DataBaseMigration
 {
 
     using System;
@@ -9,8 +11,8 @@
     {
         public static void ConfigureAndMigrate(IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("SqlDb");
-            var scriptsFolder = "DataBaseScripts";
+            var connectionString = configuration.GetConnectionString("SqlDb"); 
+            var scriptsFolder =  "DataBaseScripts";
             var rollbackScriptsFolder = "RollBackScripts";
 
             var executedScripts = new List<string>();
@@ -22,10 +24,11 @@
 
                 foreach (var scriptFile in scriptFiles)
                 {
+                    var scriptContent = System.IO.File.ReadAllText(scriptFile);
                     // Attempt to execute the migration script
                     var upgrader = DeployChanges.To
                         .SqlDatabase(connectionString)
-                        .WithScriptsFromFileSystem(scriptFile)
+                        .WithScripts(new SqlScript(scriptFile, scriptContent))
                         .LogToConsole()
                         .Build();
 
