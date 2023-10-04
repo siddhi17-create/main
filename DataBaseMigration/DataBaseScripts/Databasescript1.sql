@@ -1,4 +1,4 @@
-CREATE PROCEDURE [GetTasks]
+ALTER PROCEDURE [dbo].[GetTaskManagerDataALL]
 AS
 BEGIN
 SELECT [TaskManagerId]
@@ -6,5 +6,5 @@ SELECT [TaskManagerId]
       ,[Description]
       ,[Duedate]
       ,[Status]
-FROM [dbo].[TaskManagers]
+FROM [dbo].[TaskManagers] WHERE TaskManagerId = 1;
 END;
