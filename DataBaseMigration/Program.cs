@@ -15,6 +15,10 @@ if (args.Contains("--migrate", StringComparer.OrdinalIgnoreCase))
         .Build();
     DatabaseMigrationConfiguration.ConfigureAndMigrate(configuration);
 }
+else
+{
+    Console.WriteLine("Database migration skipped. To run the migration, use the --migrate command-line argument.");
+}
 
 var app = builder.Build();
 
