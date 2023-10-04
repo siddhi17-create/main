@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[GetTaskManagerDataALL]
+CREATE PROCEDURE [GetTaskManagerDataALL]
 AS
 BEGIN
 SELECT [TaskManagerId]
