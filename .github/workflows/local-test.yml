@@ -30,7 +30,7 @@ jobs:
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
           $process = Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate" -PassThru
-          $process.Id | Out-File -FilePath "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
+          $process.Id | Out-File -FilePath "C:\actions-runner\_work\main\main\DataBaseMigration\pid.txt"
           echo "::set-output name=result::success"
 
 
@@ -39,8 +39,8 @@ jobs:
         if: steps.start-migration.outputs.result == 'success'
         run: |
           # Check if the pid.txt file exists before attempting to stop the process
-          if (Test-Path "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt") {
-            $processId = Get-Content "C:\actions-runner\TestWork\main\main\DataBaseMigration\pid.txt"
+          if (Test-Path "C:\actions-runner\_work\main\main\DataBaseMigration\pid.txt") {
+            $processId = Get-Content "C:\actions-runner\_work\main\main\DataBaseMigration\pid.txt"
             $runningProcess = Get-Process -Id $processId -ErrorAction SilentlyContinue
             if ($runningProcess -ne $null) {
               Stop-Process -Id $processId -Force
