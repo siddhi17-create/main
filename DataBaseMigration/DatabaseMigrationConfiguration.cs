@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using Dapper;
 using DbUp;
 using DbUp.Engine;
@@ -14,11 +10,6 @@ public static class DatabaseMigrationConfiguration
     {
         var connectionString = configuration.GetConnectionString("SqlDb");
 
-        // Ensure the database is created (if not exists) before applying migrations
-        EnsureDatabase.For.SqlDatabase(connectionString);
-        EnsureMigrationHistoryTableExists(connectionString);
-
-        // Initialize DbUp upgrader
         var upgrader = DeployChanges.To
             .SqlDatabase(connectionString)
             .LogToConsole()
@@ -26,7 +17,6 @@ public static class DatabaseMigrationConfiguration
             .JournalTo(new DataBaseMigration.CustomJournal(connectionString, "MigrationHistory"))
             .Build();
 
-        // Execute the migrations
         var result = upgrader.PerformUpgrade();
 
         if (!result.Successful)
@@ -38,27 +28,9 @@ public static class DatabaseMigrationConfiguration
         else
         {
             Console.WriteLine("Database migration successful!");
-            InsertMigrationHistory(connectionString, result.Scripts);
         }
     }
-    private static void EnsureMigrationHistoryTableExists(string connectionString)
-    {
-        using (var connection = new SqlConnection(connectionString))
-        {
-            connection.Open();
-            var sqlCommand = @"
-            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MigrationHistory')
-            BEGIN
-                CREATE TABLE MigrationHistory
-                (
-                    Id INT PRIMARY KEY IDENTITY(1,1),
-                    MigrationName NVARCHAR(255) NOT NULL,
-                    AppliedOn DATETIME2 NOT NULL
-                );
-            END";
-            connection.Execute(sqlCommand);
-        }
-    }
+ 
     private static IEnumerable<SqlScript> GetMigrationScriptsFromDirectory()
     {
         var migrationDirectory = GetMigrationDirectory();
@@ -130,38 +102,6 @@ public static class DatabaseMigrationConfiguration
             .ToList();
 
         return rollbackScripts;
-    }
-
-    private static void InsertMigrationHistory(string connectionString, IEnumerable<SqlScript> appliedMigrations)
-    {
-        using (var connection = new SqlConnection(connectionString))
-        {
-            connection.Open();
-            using (var transaction = connection.BeginTransaction())
-            {
-                foreach (var appliedMigration in appliedMigrations)
-                {
-                    // Check if the migration name already exists in the table
-                    var existingMigration = connection.ExecuteScalar<string>(
-                        "SELECT MigrationName FROM MigrationHistory WHERE MigrationName = @MigrationName",
-                        new { MigrationName = appliedMigration.Name },
-                        transaction
-                    );
-
-                    if (string.IsNullOrEmpty(existingMigration))
-                    {
-                        // Insert the migration history into the table
-                        connection.Execute(
-                            "INSERT INTO MigrationHistory (MigrationName, AppliedOn) VALUES (@MigrationName, @AppliedOn)",
-                            new { MigrationName = appliedMigration.Name, AppliedOn = DateTime.UtcNow },
-                            transaction
-                        );
-                    }
-                }
-
-                transaction.Commit();
-            }
-        }
     }
 
 }

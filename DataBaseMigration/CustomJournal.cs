@@ -4,6 +4,7 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Transactions;
     using Dapper;
     using DbUp;
     using DbUp.Engine;
@@ -38,21 +39,17 @@
             }
         }
 
-        public void StoreExecutedScript(SqlScript script)
+
+        public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 connection.Execute(
-                    $"INSERT INTO {_journalTableName} (MigrationName, AppliedOn) VALUES (@MigrationName, @AppliedOn)",
-                    new { ScriptName = script.Name, AppliedOn = DateTime.UtcNow }
-                );
+                             "EXEC InsertMigrationHistory @MigrationName, @AppliedOn",
+                             new { MigrationName = script.Name, AppliedOn = DateTime.UtcNow }                           
+                         );
             }
-        }
-
-        public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
-        {
-
         }
     }
 
