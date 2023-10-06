@@ -30,7 +30,10 @@ jobs:
         id: run-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-         run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate
+         $process = Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate" -PassThru
+         $process.Id | Out-File -FilePath "pid.txt"
+         echo "::set-output name=result::success"
+
 
 
       - name: Migration Succeeded
