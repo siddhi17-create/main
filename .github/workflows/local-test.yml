@@ -30,7 +30,7 @@ jobs:
         id: run-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-         run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate"
+         run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate
 
 
       - name: Migration Succeeded
