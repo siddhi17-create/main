@@ -14,6 +14,7 @@ public static class DatabaseMigrationConfiguration
             .SqlDatabase(connectionString)
             .LogToConsole()
             .WithScripts(GetMigrationScriptsFromDirectory())
+            .JournalTo(new DataBaseMigration.CustomJournal(connectionString, "MigrationHistory"))
             .Build();
 
         var result = upgrader.PerformUpgrade();
