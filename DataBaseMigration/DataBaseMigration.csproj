@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataBaseScripts\" />
-    <Folder Include="RollBackScripts\" />
+    <Folder Include="Migrations\Migration_0\" />
   </ItemGroup>
 
 </Project>
