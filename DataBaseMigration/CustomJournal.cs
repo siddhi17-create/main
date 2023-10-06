@@ -29,27 +29,28 @@
 
         public string[] GetExecutedScripts()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var scripts = connection.Query<string>(
-                    $"SELECT MigrationName FROM {_journalTableName}"
-                ).ToArray();
-                return scripts;
-            }
+            return null;
+            //using (var connection = new SqlConnection(_connectionString))
+            //{
+            //    connection.Open();
+            //    var scripts = connection.Query<string>(
+            //        $"SELECT MigrationName FROM {_journalTableName}"
+            //    ).ToArray();
+            //    return scripts;
+            //}
         }
 
 
         public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                connection.Execute(
-                             "EXEC InsertMigrationHistory @MigrationName, @AppliedOn",
-                             new { MigrationName = script.Name, AppliedOn = DateTime.UtcNow }                           
-                         );
-            }
+            //using (var connection = new SqlConnection(_connectionString))
+            //{
+            //    connection.Open();
+            //    connection.Execute(
+            //                 "EXEC InsertMigrationHistory @MigrationName, @AppliedOn",
+            //                 new { MigrationName = script.Name, AppliedOn = DateTime.UtcNow }                           
+            //             );
+            //}
         }
     }
 
