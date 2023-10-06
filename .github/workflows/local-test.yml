@@ -7,8 +7,9 @@ on:
 
 jobs:
   build:
-    runs-on:windows-latest
-    steps:
+    runs-on: windows-latest
+    
+    steps :
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -28,28 +29,7 @@ jobs:
       - name: Run Database Migration
         id: run-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
-        run: |
-          $process = Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate" -PassThru
-          $process.Id | Out-File -FilePath "C:\actions-runner\_work\main\main\DataBaseMigration\pid.txt"
-          echo "::set-output name=result::success"
-
-
-
-      - name: Stop Database Migration
-        if: steps.start-migration.outputs.result == 'success'
-        run: |
-          # Check if the pid.txt file exists before attempting to stop the process
-          if (Test-Path "C:\actions-runner\_work\main\main\DataBaseMigration\pid.txt") {
-            $processId = Get-Content "C:\actions-runner\_work\main\main\DataBaseMigration\pid.txt"
-            $runningProcess = Get-Process -Id $processId -ErrorAction SilentlyContinue
-            if ($runningProcess -ne $null) {
-              Stop-Process -Id $processId -Force
-            } else {
-              echo "Process with ID $processId not found or already completed."
-            }
-          } else {
-            echo "pid.txt not found. The process may not have started."
-          }
+        run: dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate
 
       - name: Migration Succeeded
         if: steps.start-migration.outputs.result == 'success'
