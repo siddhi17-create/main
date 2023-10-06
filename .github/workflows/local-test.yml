@@ -30,8 +30,7 @@ jobs:
         id: run-migration
         working-directory: ./DataBaseMigration  # Adjust as needed
         run: |
-          $process = Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate" -PassThru
-
+           dotnet run --project ./DataBaseMigration.csproj -- -c DatabaseMigrationConfiguration --migrate
 
       - name: Migration Succeeded
         if: steps.start-migration.outputs.result == 'success'
